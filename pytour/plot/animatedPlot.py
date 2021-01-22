@@ -8,14 +8,16 @@ class AnimatedPlot:
 
     
     def __init__(self, tour, plot_kwargs={}, anim_kwargs={}):
-        proj = tour.currentProjection()
+        self.tour = tour
+
+        proj = self.tour.currentProjection()
 
         fig = plt.figure( figsize=(8,6) )
         ax = fig.add_subplot(111)
         points = ax.scatter(proj[:,0], proj[:,1], **plot_kwargs)
 
         self.animation = animation.FuncAnimation(
-            fig, self.update, fargs=(points, tour),
+            fig, self.update, fargs=(points, self.tour),
             **anim_kwargs
         )
 
@@ -35,3 +37,6 @@ class AnimatedPlot:
         else:
             self.animation.event_source.stop()
         self.paused = not self.paused
+
+    def currentFrame(self):
+        return self.tour.currentFrame()

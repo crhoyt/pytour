@@ -67,6 +67,13 @@ class SimpleTour:
 		tau = self.thetas * self.t / self.numSteps
 		return self.XB @ constructR(tau) @ self.Wa
 
+	def currentFrame(self):
+		""" Outputs the current frame of the tour.
+		"""
+		tau = self.thetas * self.t / self.numSteps
+		return self.B @ constructR(tau) @ self.Wa
+
+
 	def advance(self):
 		""" Advances the tour one step towards the current target frame. If the
 			current projection has reached the target frame, a target frame and
