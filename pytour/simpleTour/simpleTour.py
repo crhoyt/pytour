@@ -22,31 +22,31 @@ class SimpleTour:
 				'X property.')
 
 		self.Fz, self.numSteps = self.nextFrame()
-
+		self.checkFrame(self.Fz)
 		self.createPathToNewFrame()
 
-	# def checkFrame(self, F, tol=1e-6):
-	# 	""" Checks to make sure that the frame is a legitimate orthogonal
-	# 		matrix. That is, F^T F should be the identity matrix.
+	def checkFrame(self, F, tol=1e-6):
+		""" Checks to make sure that the frame is a legitimate orthogonal
+			matrix. That is, F^T F should be the identity matrix.
 
-	# 		Inputs:
-	# 			F - An arbitrary (p,d) matrix
+			Inputs:
+				F - An arbitrary (p,d) matrix
 
-	# 		Outputs:
-	# 			If F^T F is close to identity, nothing. Otherwise, an error is
-	# 			raised.
-	# 	"""
+			Outputs:
+				If F^T F is close to identity, nothing. Otherwise, an error is
+				raised.
+		"""
 
-	# 	d = F.shape[1]
+		d = F.shape[1]
 
-	# 	differences = F.T @ F - np.eye(d)
-	# 	error = np.linalg.norm(differences)
+		differences = F.T @ F - np.eye(d)
+		error = np.linalg.norm(differences)
 
-	# 	if error < tol:
-	# 		return
-	# 	else:
-	# 		raise AssertionError('Provided frame for SimpleTour is not ' \
-	# 			'orthogonal')
+		if error < tol:
+			return
+		else:
+			raise AssertionError('Provided frame for SimpleTour is not ' \
+				'valid.')
 
 	def createPathToNewFrame(self):
 		""" Determines a new target frame, and determines the path used to 
@@ -55,6 +55,8 @@ class SimpleTour:
 		self.Fa = self.Fz 
 		self.Fz, self.numSteps = self.nextFrame()
 		self.t = 0
+
+		self.checkFrame(self.Fz)
 
 		self.B, self.thetas, self.Wa = interpolateFrames(self.Fa, self.Fz)
 		self.XB = self.X @ self.B

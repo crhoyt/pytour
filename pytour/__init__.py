@@ -1,5 +1,6 @@
 from .simpleTour import *
 from .utils import *
+from .plot import *
 
 
 name = "pytour"
