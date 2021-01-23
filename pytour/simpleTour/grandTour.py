@@ -3,13 +3,13 @@ from ..utils import *
 
 class GrandTour:
 
-	def __init__(self, X, d, stepsBetweenFrames):
+	def __init__(self, X, d, stepsBetweenFrames, pause=0):
 
 		self.X = X
 		self.p = X.shape[1]
 		self.stepsBetweenFrames = stepsBetweenFrames
 
-		super().__init__()
+		super().__init__(pause=pause)
 
 	def nextFrame(self):
 

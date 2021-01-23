@@ -3,7 +3,7 @@ from ..utils import *
 
 class CheckpointTour:
 
-	def __init__(self, X, d, axes, stepsBetweenFrames):
+	def __init__(self, X, d, axes, stepsBetweenFrames, pause=0):
 
 		self.X = X
 		self.d = d
@@ -14,7 +14,7 @@ class CheckpointTour:
 		self.axesUsed = np.random.choice( range(self.numAxes), size=3, 
 			replace=False)
 
-		super().__init__()
+		super().__init__(pause=pause)
 
 	def nextFrame(self):
 

@@ -2,14 +2,14 @@ from .simpleTour import SimpleTour
 
 class PresetTour(SimpleTour):
 
-	def __init__(self, X, framesList, stepsBetweenFrames):
+	def __init__(self, X, framesList, stepsBetweenFrames, pause=0):
 
 		self.X = X
 		self.framesList = framesList
 		self.stepsBetweenFrames = stepsBetweenFrames
 		self.index = 0
 
-		super().__init__()
+		super().__init__(pause=pause)
 
 	def nextFrame(self):
 

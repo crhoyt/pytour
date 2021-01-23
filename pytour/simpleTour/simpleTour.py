@@ -8,7 +8,7 @@ class SimpleTour:
 	"""
 
 
-	def __init__(self):
+	def __init__(self, pause=0):
 		""" Constructs a SimpleTour object given a generator function that
 			specifies the next frame to travel to and the number of steps to
 			take. Should not be called explicitly.
@@ -20,6 +20,10 @@ class SimpleTour:
 		if not hasattr(self, 'X'):
 			raise RuntimeError('SimpleTour instance has no specified '\
 				'X property.')
+
+		# Setup pausing option if we want to wait on certain frames.
+		self.pause = pause
+		self.moveFlag = True
 
 		self.Fz, self.numSteps = self.nextFrame()
 		self.checkFrame(self.Fz)
@@ -64,13 +68,19 @@ class SimpleTour:
 	def currentProjection(self):
 		""" Outputs the current projection of the tour.
 		"""
-		tau = self.thetas * self.t / self.numSteps
+		if self.moveFlag:
+			tau = self.thetas * self.t / self.numSteps
+		else:
+			tau = 1
 		return self.XB @ constructR(tau) @ self.Wa
 
 	def currentFrame(self):
 		""" Outputs the current frame of the tour.
 		"""
-		tau = self.thetas * self.t / self.numSteps
+		if self.moveFlag:
+			tau = self.thetas * self.t / self.numSteps
+		else:
+			tau = 1
 		return self.B @ constructR(tau) @ self.Wa
 
 
@@ -83,9 +93,28 @@ class SimpleTour:
 				A 2D numpy array representing the current projection after a
 				single step.
 		"""
-		self.t += 1
-		if self.t == self.numSteps:
-			self.createPathToNewFrame()
+
+		if self.moveFlag:
+			if self.t < self.numSteps:
+				self.t += 1
+
+			else:
+				if self.pause > 0:
+					self.t = 1
+					self.numSteps = self.pause
+					self.moveFlag = False
+				else:
+					self.createPathToNewFrame()
+		else:
+			if self.t < self.numSteps:
+				self.t += 1
+			else:
+				self.createPathToNewFrame()
+				self.moveFlag = True
+
+			pass
+
+
 		return self.currentProjection()
 
 
