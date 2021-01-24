@@ -153,3 +153,23 @@ def constructR(thetas, oddDimension=False):
     
 
     return R
+
+
+def rotSpeed(Fa, Fz, alpha_p=2, alpha_w=1 ):
+
+    if Fa == None:
+        return 0
+        
+    B, thetas, Wa =  interpolateFrames(Fa, Fz)
+
+    R = constructR(thetas)
+    F = B @ R @ Wa
+
+    D = np.kron(thetas, [1,1])
+    D = np.diag(D)
+
+    F_prime = B @ D @ R @ Wa
+
+    speed  = alpha_p * np.linalg.norm(F_prime, "fro")**2
+    speed += (alpha_w - alpha_p) * np.linalg.norm(F.T @ F_prime, "fro")**2
+    return speed

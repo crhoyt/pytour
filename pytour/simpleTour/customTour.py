@@ -7,6 +7,6 @@ class CheckpointTour:
 		self.X = X
 		super().__init__(pause=pause)
 
-	def nextFrame(self):
+	def nextFrame(self, lastFrame):
 
-		return generator()
+		return generator(lastFrame)
