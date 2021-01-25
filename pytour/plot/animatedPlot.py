@@ -2,10 +2,22 @@ import matplotlib.pyplot as plt
 from matplotlib import animation
 
 class AnimatedPlot:
+    """ A plot utility that takes in a specified tour, and creates an
+        interactive matplotlib.pyplot figure that explores the data.
+    """
 
     def __init__(self, tour, plot_kwargs={}, anim_kwargs={}):
-        self.tour = tour
+        """ Constructs the Animated Plot object.
 
+            Inputs:
+                tour - A tour object (PresetTour, CustomTour, ect)
+                plot_kwargs - A dict specifying the arguments passed onto the
+                    plotting utility.
+                anim_kwargs - A dict specifying the arguments passed onto theh
+                    animaiton utility.
+        """
+
+        self.tour = tour
         
         # Setup the initial plot:
         proj = self.tour.currentProjection()
@@ -35,12 +47,31 @@ class AnimatedPlot:
 
         plt.show()
 
+
+
     def update(self, i):
+        """ Update the plot and tour by one timestep.
+
+            Inputs:
+                i - A positive integer representing the current time (unused)
+
+            Output:
+                A handle to the updated scatterplot.
+        """
         proj = self.tour.advance()
         self.sc.set_offsets(proj)
         return self.sc
 
     def hover(self, event):
+        """ Update the annotation given the specified event
+
+            Inputs:
+                event - a matplotlib.pyplot event specifying an action made by 
+                    the user.
+
+            Output:
+                No output given, but the annotation is changed accordingly.
+        """
         vis = self.annot.get_visible()
         if event.inaxes == self.ax:
             cont, ind = self.sc.contains(event)
@@ -57,6 +88,16 @@ class AnimatedPlot:
                     self.fig.canvas.draw()
 
     def pause(self, *args, **kwargs):
+        """ Pauses or unpauses the animation when called.
+
+            Inputs:
+                *args - positional arguments (unused)
+                **kwargs - keyword arguments (unused)
+
+            Output:
+                No output given, but the animation is paused if it was playing,
+                and plays if was paused.
+        """
         if self.paused:
             self.animation.event_source.start()
         else:
@@ -64,4 +105,13 @@ class AnimatedPlot:
         self.paused = not self.paused
 
     def currentFrame(self):
+        """ Return the current frame of the tour.
+
+            Inputs:
+                None
+
+            Outputs:
+                A 2D numpy array of size (p,d) representing the current frame
+                visualized in the tour.
+        """
         return self.tour.currentFrame()

@@ -94,24 +94,34 @@ class SimpleTour:
 				single step.
 		"""
 
+		# If we're moving to the next frame, ...
 		if self.moveFlag:
+
+			# ... we keep on moving towards the next frame.
 			if self.t < self.numSteps:
 				self.t += 1
 
+			# Once we reach the next frame, we either ...
 			else:
+				# ... move into pause mode or ...
 				if self.pause > 0:
 					self.t = 1
 					self.moveFlag = False
+				# ... setup the path to the new frame.
 				else:
 					self.createPathToNewFrame()
+
+		# If we're paused, ...
 		else:
+
+			# ... we wait until we've waited the time specified.
 			if self.t < self.pause:
 				self.t += 1
+
+			# Afterwards, we plan our next path, and exit pause mode.
 			else:
 				self.createPathToNewFrame()
 				self.moveFlag = True
-
-			pass
 
 
 		return self.currentProjection()

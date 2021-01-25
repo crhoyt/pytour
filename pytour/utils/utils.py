@@ -120,7 +120,7 @@ def interpolateFrames(Fa, Fz):
 
     return B, thetas, Wa
 
-def constructR(thetas, oddDimension=False):
+def constructR(thetas, odd=False):
     """ Given a list of angles, reconstruct a block diagonal matrix consisting
         of Givens rotations with the angles specified by the thetas.
 
@@ -128,16 +128,19 @@ def constructR(thetas, oddDimension=False):
             thetas - A 1D numpy array representing angles in radians of size 
                 (d)
 
+            odd - A boolean identifying whether or not a extra 1 should be added
+                to the diagonal, making the resulting matrix have odd dimension
+
         Outputs:
-            R - A 2D numpy array representing an block diagonal matrix of size
-                (2d,2d)
+            A 2D numpy array representing an block diagonal matrix of size
+            (2d,2d) if odd is False, and size(2d+1, 2d+1) if odd is True.
 
             The output has the property that: R[ 2j:2j+1, 2j:2j+1 ] = 
             [cos(thetas[j]), sin(thetas[j]); -sin(thetas[j]), cos(thetas[j])] 
             for j from 1 to d.
     """
     d = np.shape(thetas)[0]
-    m = 2*d + int(oddDimension)
+    m = 2*d + int(odd)
     
     R = np.zeros( (m, m) )
 
@@ -148,28 +151,41 @@ def constructR(thetas, oddDimension=False):
         R[2*i+1, 2*i  ] = - np.sin(theta)
         R[2*i+1, 2*i+1] =   np.cos(theta)
         
-    if oddDimension:
+    if odd:
         R[2*d, 2*d] = 1
     
 
     return R
 
 
-def rotSpeed(Fa, Fz, alpha_p=2, alpha_w=1 ):
-
-    if Fa == None:
-        return 0
+def pathSpeed(B, thetas, Wa, alpha_p=2, alpha_w=1 ):
+    """ Given the path specified by F(t) = B constructR(thetas*t) Wa, calculate 
+        the speed of the path of frames as given by the formula:
         
-    B, thetas, Wa =  interpolateFrames(Fa, Fz)
+        speed(F(t)) = alpha_p * |F'|_F^2 + (alpha_w - alpha_p) * |F^T F'|_F^2
 
-    R = constructR(thetas)
-    F = B @ R @ Wa
+        where alpha_p > 0 and alpha_w >= 0 are specified constants. The formula
+        represents all possible rotationally inveriant metrics on the manifold
+        of all possible frames.
+
+        Inputs:
+            B - A 2D numpy array representing an orthogonal matrix of size 
+                (p,2d)
+            thetas - A 1D numpy array representing angles in radians of size 
+                (d)
+            Wa - A 2D numpy array representing an orthogonal matrix of size
+                (2d, d)
+
+            alpha_p - a positive valued float. Set to 2 by default.
+            alpha_w - a non-negative valued float. Set to 1 by default.
+
+            Th
+    """
 
     D = np.kron(thetas, [1,1])
     D = np.diag(D)
 
-    F_prime = B @ D @ R @ Wa
+    speed  = alpha_p * np.linalg.norm(D @ Wa, "fro")**2 
+    speed += (alpha_w-alpha_p) * np.linalg.norm(Wa.T @ D @ Wa, "fro")**2
 
-    speed  = alpha_p * np.linalg.norm(F_prime, "fro")**2
-    speed += (alpha_w - alpha_p) * np.linalg.norm(F.T @ F_prime, "fro")**2
     return speed
