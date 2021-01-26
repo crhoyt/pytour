@@ -105,7 +105,7 @@ class CheckpointTour(SimpleTour):
 		# no changes, and then scale up the number of steps so that we're
 		# constant.
 		elif self.mode == "constSpeed":
-			if lastFrame = None:
+			if lastFrame == None:
 				numSteps = 0
 			else:
 				B, thetas, Wa = interpolateFrames(lastFrame, newFrame)
