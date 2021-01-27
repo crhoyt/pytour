@@ -1,5 +1,6 @@
 import numpy as np
 from ..utils import *
+from .simpleTour import SimpleTour
 
 class CustomTour(SimpleTour):
 	""" A class for enacting custom simple tours. We travel from frame to frame

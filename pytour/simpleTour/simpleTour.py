@@ -25,7 +25,7 @@ class SimpleTour:
 		self.pause = pause
 		self.moveFlag = True
 
-		self.Fz, self.numSteps = self.nextFrame()
+		self.Fz, self.numSteps = self.nextFrame(None)
 		self.checkFrame(self.Fz)
 		self.createPathToNewFrame()
 
@@ -57,7 +57,7 @@ class SimpleTour:
 			travel to it.
 		"""
 		self.Fa = self.Fz 
-		self.Fz, self.numSteps = self.nextFrame()
+		self.Fz, self.numSteps = self.nextFrame(self.Fa)
 		self.t = 0
 
 		self.checkFrame(self.Fz)

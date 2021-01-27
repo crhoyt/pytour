@@ -1,5 +1,6 @@
 import numpy as np
 from ..utils import *
+from .simpleTour import SimpleTour
 
 class GrandTour(SimpleTour):
 	""" A class for enacting grand tours, where the tour always selects a random
@@ -89,7 +90,7 @@ class GrandTour(SimpleTour):
 		# no changes, and then scale up the number of steps so that we're
 		# constant.
 		elif self.mode == "constSpeed":
-			if lastFrame = None:
+			if lastFrame == None:
 				numSteps = 0
 			else:
 				B, thetas, Wa = interpolateFrames(lastFrame, newFrame)

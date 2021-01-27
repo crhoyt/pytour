@@ -1,5 +1,6 @@
 import numpy as np
 from ..utils import *
+from .simpleTour import *
 
 class CheckpointTour(SimpleTour):
 	""" A class for enacting checkpoint tours, where the tour travels to random

@@ -53,7 +53,7 @@ class PresetTour(SimpleTour):
 
 		self.X = X
 		self.framesList = framesList
-		self.stepsBetweenFrames = stepsBetweenFrames
+		self.stepsBetweenFrames = numSteps
 		self.index = 0
 
 		super().__init__(pause=pause)
@@ -88,13 +88,13 @@ class PresetTour(SimpleTour):
 		# If we are moving with constant time, we just use the specified number
 		# of steps.
 		if self.mode == "constTime":
-			numSteps = self.numSteps
+			numSteps = self.stepsBetweenFrames
 
 		# If we are moving with constant speed, we calculate the path speed with
 		# no changes, and then scale up the number of steps so that we're
 		# constant.
 		elif self.mode == "constSpeed":
-			if lastFrame = None:
+			if lastFrame == None:
 				numSteps = 0
 			else:
 				B, thetas, Wa = interpolateFrames(lastFrame, newFrame)
