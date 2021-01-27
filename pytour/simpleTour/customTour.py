@@ -49,4 +49,4 @@ class CustomTour(SimpleTour):
 
 		"""
 
-		return generator(lastFrame)
+		return generator()

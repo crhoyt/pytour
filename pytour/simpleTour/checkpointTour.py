@@ -57,16 +57,17 @@ class CheckpointTour(SimpleTour):
 			self.numSteps = None
 			self.rotSpeed = rotSpeed
 
-
 		self.X = X
 		self.d = d
 		self.axes = axes
+		self.stepsBetweenFrames = stepsBetweenFrames
 
 		self.numAxes = axes.shape[1]
 		self.axesUsed = np.random.choice( range(self.numAxes), size=3, 
 			replace=False)
 
 		super().__init__(pause=pause)
+
 
 	def nextFrame(self, lastFrame):
 		""" A method that gives the next frame and the number of steps that
@@ -111,5 +112,8 @@ class CheckpointTour(SimpleTour):
 				B, thetas, Wa = interpolateFrames(lastFrame, newFrame)
 				numSteps = int(pathSpeed(B, thetas, Wa) / self.rotSpeed)
 
+		
+
+		numSteps = self.stepsBetweenFrames
 
 		return (newFrame, numSteps)

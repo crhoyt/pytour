@@ -154,7 +154,6 @@ def constructR(thetas, odd=False):
     if odd:
         R[2*d, 2*d] = 1
     
-
     return R
 
 

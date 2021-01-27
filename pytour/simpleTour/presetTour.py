@@ -1,5 +1,4 @@
 from .simpleTour import SimpleTour
-from ..utils import *
 
 class PresetTour(SimpleTour):
 	""" A class for enacting preset (or planned) tours, where the tour simply
@@ -54,9 +53,11 @@ class PresetTour(SimpleTour):
 
 		self.X = X
 		self.framesList = framesList
-		self.index = -1
+		self.stepsBetweenFrames = stepsBetweenFrames
+		self.index = 0
 
 		super().__init__(pause=pause)
+
 
 	def nextFrame(self, lastFrame):
 		""" A method that gives the next frame and the number of steps that
@@ -80,6 +81,7 @@ class PresetTour(SimpleTour):
 		self.index += 1
 		if self.index == len(self.framesList):
 			self.index = 0
+
 
 		newFrame = self.framesList[self.index]
 

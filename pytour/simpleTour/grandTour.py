@@ -53,8 +53,10 @@ class GrandTour(SimpleTour):
 
 		self.X = X
 		self.p = X.shape[1]
+		self.stepsBetweenFrames = stepsBetweenFrames
 
 		super().__init__(pause=pause)
+
 
 	def nextFrame(self, lastFrame):
 		""" A method that gives the next frame and the number of steps that
