@@ -1,4 +1,5 @@
 from .simpleTour import SimpleTour
+from ..utils import *
 
 class PresetTour(SimpleTour):
 	""" A class for enacting preset (or planned) tours, where the tour simply
@@ -54,9 +55,27 @@ class PresetTour(SimpleTour):
 		self.X = X
 		self.framesList = framesList
 		self.stepsBetweenFrames = numSteps
-		self.index = 0
+		self.index = 1
 
-		super().__init__(pause=pause)
+		# Calculate the tuples B, thetas, Wa used in each path:
+		self.numFrames = len(framesList)
+		self.listOfPaths = []
+		self.listOfXB = []
+		for frameIndex in range(self.numFrames):
+			sourceFrame = framesList[ frameIndex-1 ]
+			targetFrame = framesList[ frameIndex   ]
+
+			path = interpolateFrames(sourceFrame, targetFrame)
+			self.listOfPaths += [path]
+
+			XB = self.X @ path[0]
+			self.listOfXB += [XB]
+
+		# Setup pausing option if we want to wait on certain frames.
+		self.pause = pause
+		self.moveFlag = True
+
+		self.createPathToNewFrame()
 
 
 	def nextFrame(self, lastFrame):
@@ -76,29 +95,20 @@ class PresetTour(SimpleTour):
 
 		"""
 
-		# We increment our index to the next entry in the list. If we go over
-		# the list length, we wrap around back to zero.
+		return None
+
+	def createPathToNewFrame(self):
+		""" Determines a new target frame, and determines the path used to 
+			travel to it.
+		"""
+
+		self.t = 0
+
 		self.index += 1
-		if self.index == len(self.framesList):
+		if self.index == self.numFrames:
 			self.index = 0
+		self.B, self.thetas, self.Wa = self.listOfPaths[self.index]
+		self.XB = self.listOfXB[self.index]
 
-
-		newFrame = self.framesList[self.index]
-
-		# If we are moving with constant time, we just use the specified number
-		# of steps.
-		if self.mode == "constTime":
-			numSteps = self.stepsBetweenFrames
-
-		# If we are moving with constant speed, we calculate the path speed with
-		# no changes, and then scale up the number of steps so that we're
-		# constant.
-		elif self.mode == "constSpeed":
-			if lastFrame == None:
-				numSteps = 0
-			else:
-				B, thetas, Wa = interpolateFrames(lastFrame, newFrame)
-				numSteps = int(pathSpeed(B, thetas, Wa) / self.rotSpeed)
-
-		return (newFrame, numSteps)
-
+		self.numSteps = self.stepsBetweenFrames
+		

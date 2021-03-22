@@ -6,7 +6,7 @@ class AnimatedPlot:
         interactive matplotlib.pyplot figure that explores the data.
     """
 
-    def __init__(self, tour, plot_kwargs={}, anim_kwargs={}):
+    def __init__(self, tour, plot_kwargs={}, anim_kwargs={}, saveFile=None):
         """ Constructs the Animated Plot object.
 
             Inputs:
@@ -45,7 +45,12 @@ class AnimatedPlot:
         self.paused = False
         self.fig.canvas.mpl_connect('button_press_event', self.pause)
 
+        if saveFile != None:
+            self.animation.save(saveFile)
+
         plt.show()
+
+        
 
 
 

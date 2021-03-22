@@ -71,7 +71,8 @@ class SimpleTour:
 		if self.moveFlag:
 			tau = self.thetas * self.t / self.numSteps
 		else:
-			tau = 1
+			tau = self.thetas
+
 		return self.XB @ constructR(tau) @ self.Wa
 
 	def currentFrame(self):
@@ -93,7 +94,7 @@ class SimpleTour:
 				A 2D numpy array representing the current projection after a
 				single step.
 		"""
-
+		
 		# If we're moving to the next frame, ...
 		if self.moveFlag:
 
@@ -114,7 +115,6 @@ class SimpleTour:
 
 		# If we're paused, ...
 		else:
-
 
 			# ... we wait until we've waited the time specified.
 			if self.t < self.pause:

@@ -63,6 +63,7 @@ class CheckpointTour(SimpleTour):
 		self.axes = axes
 		self.stepsBetweenFrames = stepsBetweenFrames
 
+
 		self.numAxes = axes.shape[1]
 		self.axesUsed = np.random.choice( range(self.numAxes), size=3, 
 			replace=False)

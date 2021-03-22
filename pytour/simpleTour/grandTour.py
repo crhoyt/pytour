@@ -54,7 +54,8 @@ class GrandTour(SimpleTour):
 
 		self.X = X
 		self.p = X.shape[1]
-		self.stepsBetweenFrames = stepsBetweenFrames
+		self.d = d
+		# self.stepsBetweenFrames = stepsBetweenFrames
 
 		super().__init__(pause=pause)
 
@@ -77,7 +78,7 @@ class GrandTour(SimpleTour):
 		"""
 
 		# Generate a random orthogonal matrix to use as the next frame.
-		newFrame = np.random.normal( size=(p,d) )
+		newFrame = np.random.normal( size=(self.p,self.d) )
 		newFrame, _ = np.linalg.qr(newFrame)
 		
 
