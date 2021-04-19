@@ -22,10 +22,10 @@ class SimpleTour:
 				'X property.')
 
 		# Setup pausing option if we want to wait on certain frames.
-		self.pause = pause
+		self.pauseSteps = pause
 		self.moveFlag = True
 
-		self.Fz, self.numSteps = self.nextFrame(None)
+		self.Fz, self.moveSteps = self.nextFrame(None)
 		self.checkFrame(self.Fz)
 		self.createPathToNewFrame()
 
@@ -35,10 +35,11 @@ class SimpleTour:
 
 			Inputs:
 				F - An arbitrary (p,d) matrix
+				tol - the error tolerance
 
 			Outputs:
-				If F^T F is close to identity, nothing. Otherwise, an error is
-				raised.
+				If |F^T F|_2 < tol, we say that F is close enough to orthogonal
+				and return nothing. Otherwise, we raise an error.
 		"""
 
 		d = F.shape[1]
@@ -52,16 +53,25 @@ class SimpleTour:
 			raise AssertionError('Provided frame for SimpleTour is not ' \
 				'valid.')
 
-	def createPathToNewFrame(self):
+	def createPathToNewFrame(self, checkFlag=True):
 		""" Determines a new target frame, and determines the path used to 
 			travel to it.
+
+			Inputs:
+				checkFlag - A boolean. If True, we check whether or not the
+					next frame we travel to is orthogonal or not.
 		"""
+
+		# Cycle through the visited frames:
 		self.Fa = self.Fz 
-		self.Fz, self.numSteps = self.nextFrame(self.Fa)
+		self.Fz, self.moveSteps = self.nextFrame(self.Fa)
 		self.t = 0
 
-		self.checkFrame(self.Fz)
+		# Check that the next frame we travel to is indeed orthogonal
+		if checkFlag:
+			self.checkFrame(self.Fz)
 
+		# Determine the parameters of the walk we should take.
 		self.B, self.thetas, self.Wa = interpolateFrames(self.Fa, self.Fz)
 		self.XB = self.X @ self.B
 
@@ -69,7 +79,7 @@ class SimpleTour:
 		""" Outputs the current projection of the tour.
 		"""
 		if self.moveFlag:
-			tau = self.thetas * self.t / self.numSteps
+			tau = self.thetas * self.t / self.moveSteps
 		else:
 			tau = self.thetas
 
@@ -79,7 +89,7 @@ class SimpleTour:
 		""" Outputs the current frame of the tour.
 		"""
 		if self.moveFlag:
-			tau = self.thetas * self.t / self.numSteps
+			tau = self.thetas * self.t / self.moveSteps
 		else:
 			tau = 1
 		return self.B @ constructR(tau) @ self.Wa
@@ -99,15 +109,15 @@ class SimpleTour:
 		if self.moveFlag:
 
 			# ... we keep on moving towards the next frame.
-			if self.t < self.numSteps:
+			if self.t < self.moveSteps:
 				self.t += 1
 
 			# Once we reach the next frame, we either ...
 			else:
 				# ... move into pause mode or ...
-				if self.pause > 0:
+				if self.pauseSteps > 0:
 					self.t = 1
-					self.numSteps = self.pause
+					self.moveSteps = self.pauseSteps
 					self.moveFlag = False
 				# ... setup the path to the new frame.
 				else:
@@ -117,7 +127,7 @@ class SimpleTour:
 		else:
 
 			# ... we wait until we've waited the time specified.
-			if self.t < self.pause:
+			if self.t < self.pauseSteps:
 				self.t += 1
 
 			# Afterwards, we plan our next path, and exit pause mode.

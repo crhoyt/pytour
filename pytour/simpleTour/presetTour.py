@@ -44,12 +44,12 @@ class PresetTour(SimpleTour):
 
 		elif constTime:
 			self.mode = "constTime"
-			self.numSteps = numSteps
+			self.moveSteps = numSteps
 			self.rotSpeed = None 
 
 		else:
 			self.mode = "constSpeed"
-			self.numSteps = None
+			self.moveSteps = None
 			self.rotSpeed = rotSpeed
 
 		self.X = X
@@ -110,5 +110,5 @@ class PresetTour(SimpleTour):
 		self.B, self.thetas, self.Wa = self.listOfPaths[self.index]
 		self.XB = self.listOfXB[self.index]
 
-		self.numSteps = self.stepsBetweenFrames
+		self.moveSteps = self.stepsBetweenFrames
 		

@@ -50,12 +50,12 @@ class CheckpointTour(SimpleTour):
 
 		elif constTime:
 			self.mode = "constTime"
-			self.numSteps = numSteps
+			self.moveSteps = numSteps
 			self.rotSpeed = None 
 
 		else:
 			self.mode = "constSpeed"
-			self.numSteps = None
+			self.moveSteps = None
 			self.rotSpeed = rotSpeed
 
 		self.X = X
@@ -102,7 +102,7 @@ class CheckpointTour(SimpleTour):
 		# If we are moving with constant time, we just use the specified number
 		# of steps.
 		if self.mode == "constTime":
-			numSteps = self.numSteps
+			numSteps = self.moveSteps
 
 		# If we are moving with constant speed, we calculate the path speed with
 		# no changes, and then scale up the number of steps so that we're
