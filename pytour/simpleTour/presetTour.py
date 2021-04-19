@@ -72,7 +72,7 @@ class PresetTour(SimpleTour):
 			self.listOfXB += [XB]
 
 		# Setup pausing option if we want to wait on certain frames.
-		self.pause = pause
+		self.pauseSteps = pause
 		self.moveFlag = True
 
 		self.createPathToNewFrame()

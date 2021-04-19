@@ -117,7 +117,7 @@ class SimpleTour:
 				# ... move into pause mode or ...
 				if self.pauseSteps > 0:
 					self.t = 1
-					self.moveSteps = self.pauseSteps
+					# self.moveSteps = self.pauseSteps
 					self.moveFlag = False
 				# ... setup the path to the new frame.
 				else:
